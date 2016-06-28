@@ -8,6 +8,20 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import field.FieldOperations;
+import generic.PaintTool;
+import generic.Pair;
+import rule.Puzzle;
+import rule.Rule;
+import rule.RuleGenerator;
+import shape.AbstractShapeFactory;
+import shape.Shape;
+import shape.ShapeFactory;
+import shape.ShapeType;
+import shape.SimpleShape;
+import template.StandardTemplate;
+import template.Template;
+
 public class Generator {
 	private static final Pair randomPair() {
 		int x = (int)Math.random()*5,
