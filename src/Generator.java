@@ -30,12 +30,15 @@ public class Generator {
 	}
 	public static void main(String[] args) {
 		final Template template =
-				new StandardTemplate(600);
+				new StandardTemplate(50,10,1,3);
 		final PaintTool paintTool =
 				new PaintTool();
 		final RuleGenerator ruleGenerator = 
 				new RuleGenerator(1,2);
 		ruleGenerator.addTransformationAt(new int[]{9, 10}, (shape) -> {
+			if(shape == null) {
+				throw new NullPointerException("Shape is null!");
+			}
 			BufferedImage image = shape.getImage();
 			if(image == null) {
 				image =
@@ -44,10 +47,20 @@ public class Generator {
 				paintTool.draw(shape, true);
 				shape.setImage(image);
 			}
-			FieldOperations.translate(image, 0.2D, 0.0D, template.getCellSize());
-			return shape;
+			BufferedImage transformed = 
+					FieldOperations.translate(image, 0.2D, 0.0D, template.getCellSize());
+			Shape transformedShape = null;
+			try {
+				transformedShape = (Shape) shape.clone();
+				transformedShape.setImage(transformed);
+			} catch (Exception e) {
+			}
+			return transformedShape;
 		});
 		ruleGenerator.addTransformationAt(new int[]{9, 10}, (shape) -> {
+			if(shape == null) {
+				throw new NullPointerException("Shape is null!");
+			}
 			BufferedImage image = shape.getImage();
 			if(image == null) {
 				image =
@@ -56,8 +69,15 @@ public class Generator {
 				paintTool.draw(shape, true);
 				shape.setImage(image);
 			}
-			FieldOperations.translate(image, 0.0D, 0.2D, template.getCellSize());
-			return shape;
+			BufferedImage transformed = 
+					FieldOperations.translate(image, 0.0D, 0.2D, template.getCellSize());
+			Shape transformedShape = null;
+			try {
+				transformedShape = (Shape) shape.clone();
+				transformedShape.setImage(transformed);
+			} catch (Exception e) {
+			}
+			return transformedShape;
 		}); 
 		ruleGenerator.setPickingProbability(0, 0, 0.5);
 		ruleGenerator.setPickingProbability(0, 1, 0.5);
@@ -94,6 +114,8 @@ public class Generator {
 		puzzle.addRule(1, 2, secondRule);
 		Map<Integer, List<Shape>> resultedPuzzle =
 				puzzle.runPuzzle();
+		
+		paintTool.paintPuzzle(resultedPuzzle, template);
 		/*Template template = new StandardTemplate(600);
 		ShapeFactory factory = new ShapeFactory(template.getCellSize());
 		FieldOperations fieldOperations = new FieldOperations();
@@ -139,13 +161,13 @@ public class Generator {
 		template.superposeAt(0, 1, fieldOperations.superpose(rot, oval2));
 		template.superposeAt(0, 2, fieldOperations.superpose(rot2, oval3));
 		*/
-		BufferedImage image = template.getImage();
+		/*BufferedImage image = template.getImage();
 		
 		try {
 		    File outputfile = new File("saved.jpg");
 		    ImageIO.write(image, "jpg", outputfile);
 		} catch (IOException e) {
-		}
+		}*/
 		
 	}
 }

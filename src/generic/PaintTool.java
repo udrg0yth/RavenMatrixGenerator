@@ -2,11 +2,15 @@ package generic;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.Map;
 
+import field.FieldOperations;
 import shape.PolygonShape;
 import shape.Shape;
 import shape.SimpleShape;
+import template.Template;
 
 public class PaintTool {
 	private Graphics2D graphics;
@@ -64,6 +68,19 @@ public class PaintTool {
 				}
 			}
 		}
+	}
+	
+	public void paintPuzzle(Map<Integer, List<Shape>> resultedPuzzle, Template template) {
+		graphics = (Graphics2D) template.getImage().getGraphics();
+		resultedPuzzle
+		.forEach((key,value) -> {
+			BufferedImage cell =
+					template.prepareCell();
+			for(Shape shape: value) {
+				cell = FieldOperations.superpose(cell, shape.getImage());
+			}
+			template.superposeAt(key/template.getLines(), key%template.getCols(), cell);
+		});
 	}
 	
 	public void setBrushSize(float size) {

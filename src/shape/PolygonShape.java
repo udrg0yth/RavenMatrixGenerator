@@ -39,4 +39,9 @@ public class PolygonShape implements Shape{
 	public BufferedImage getImage() {
 		return image;
 	}
+	
+	@Override
+	public String toString() {
+		return "[" + shapeType.name() + "," + vertices + "]";
+	}
 }
