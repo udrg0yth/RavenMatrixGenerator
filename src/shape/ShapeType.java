@@ -1,6 +1,8 @@
 package shape;
 
-public enum ShapeType {
+import java.io.Serializable;
+
+public enum ShapeType implements Serializable{
 	OVAL,
 	TRIANGLE,
 	RECTANGLE,

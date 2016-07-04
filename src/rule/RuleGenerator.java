@@ -40,24 +40,25 @@ public class RuleGenerator extends HiddenMarkovModel<Transformation>{
 	public Rule generate(int depth, int[] shapes) {
 		Random random =
 				new Random();
-		int currentDepth = 0;
+		
 		Rule rule =
 				new Rule();
 		for(int shape: shapes){
+			int currentDepth = 0;
 			while(currentDepth < depth) {
 				double pickingProbability = random.nextDouble();
+				double totalProb = 0;
 				for(int i=0;i<getNumberOfObjects();i++) {
-					if(pickingProbability < getPickingProbability(0, i)) {
+					if(pickingProbability < totalProb + getPickingProbability(0, i)) {
 						rule.addTransformationAt(shape, transformationsMap
 								.get(shape)
 								.get(i));
 						++currentDepth;
-					}
-					if(currentDepth == depth-1) {
 						break;
-					}
+					} 
+					totalProb += getPickingProbability(0, i);
 				}
-				if(currentDepth == depth-1) {
+				if(currentDepth == depth) {
 					break;
 				}
 			}

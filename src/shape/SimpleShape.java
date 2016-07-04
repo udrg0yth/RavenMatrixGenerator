@@ -1,4 +1,5 @@
 package shape;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
@@ -6,58 +7,32 @@ import java.util.List;
 import generic.Pair;
 
 public class SimpleShape implements Shape{
-	private Pair topLeftCorner;
-	private Pair endCorner;
-	private Pair size;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3342844952929384744L;
+	private Bound bound;
 	private ShapeType shapeType;
 	private BufferedImage image;
 	
-	public SimpleShape(Pair topLeftCorner,
-			Pair size,
+	public SimpleShape(Bound bound,
 			ShapeType shapeType) {
-		this.topLeftCorner = topLeftCorner;
+		this.bound = bound;
 		this.shapeType = shapeType;
-	}
-	
-	public SimpleShape(Pair topLeftCorner,
-			Pair endCorner,
-			Pair size,
-			ShapeType shapeType) {
-		this(topLeftCorner, size, shapeType);
-		this.size = size;
-		this.endCorner = endCorner;
 	}
 
 	public List<Pair> getPoints() {
 		List<Pair> list =
 				new LinkedList<>();
-		list.add(topLeftCorner);
-		if(endCorner != null)
-			list.add(endCorner);
-		if(size != null)
-			list.add(size);
+		list.add(bound.getTopLeftCorner());
+		list.add(new Pair(bound.getTopLeftCorner().getX() +
+				bound.getSize().getX(), bound.getTopLeftCorner().getY() + 
+				bound.getSize().getY()));
 		return list;
 	}
 	
 	public ShapeType getShapeType() {
 		return shapeType;
-	}
-
-	public Pair getTopLeftCorner() {
-		return topLeftCorner;
-	}
-
-	public Pair getEndCorner() {
-		return endCorner;
-	}
-	
-	public Pair getSize() {
-		return size;
-	}
-
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		return super.clone();
 	}
 
 	@Override
@@ -71,10 +46,40 @@ public class SimpleShape implements Shape{
 	}
 
 	@Override
-	public String toString() {
-		return "[" + shapeType.name() + ","
-			+  topLeftCorner.toString() + ","
-			+  endCorner!=null?endCorner.toString():"" + "]";
+	public Bound getBound() {
+		return bound;
+	}
+
+	@Override
+	public void translate(double dx, double dy) {
+		bound.setTopLeftCorner(new Pair(bound.getTopLeftCorner().getX() + dx, bound.getTopLeftCorner().getY() + dy));
+	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if(object instanceof SimpleShape) {
+			SimpleShape simpleShape = (SimpleShape) object;
+			return this.shapeType == simpleShape.shapeType &&
+				this.bound.equals(simpleShape.bound);
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return shapeType.ordinal() * 31
+			+ bound.hashCode();
+	}
+
+	@Override
+	public Shape getCopy() {
+		Shape simpleShape = new SimpleShape(bound.getCopy(), shapeType);
+		BufferedImage copy = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+	    Graphics2D g2D =(Graphics2D) copy.getGraphics();
+	    g2D.drawImage(image, 0, 0, null);
+	    g2D.dispose();
+		simpleShape.setImage(copy);
+		return simpleShape;
 	}
 
 }
