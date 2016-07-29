@@ -1,10 +1,16 @@
 package shape;
 
-import java.io.Serializable;
-
-public enum ShapeType implements Serializable{
+public enum ShapeType{
 	OVAL,
 	TRIANGLE,
 	RECTANGLE,
+	DIAMOND,
+	BOW,
+	PENTAGRAM,
+	HEXAGRAM,
+	PENTAGON,
+	HEXAGON,
+	HEPTAGON,
+	OCTAGON,
 	LINE;
 }
